@@ -15,6 +15,7 @@ type PnrItemObj interface {
 
 type PNR struct {
 	Text   string
+	Code   string
 	ObjAry []PnrItemObj
 }
 
@@ -38,15 +39,17 @@ func (p *PNR) Analysis() {
 		return
 	}
 	//第二、三行为基本信息，从第二行取PNR编码
-	strAry := strings.SplitAfter(strings.TrimSpace(lines[1]), " ")
-	code := strAry[len(strAry)-1]
-	fmt.Println(code)
+	l := strings.TrimSpace(lines[1])
+	p.Code = l[len(l)-6:]
+
+	fmt.Println(p.Code)
 
 	eachItem(lines[3:], p.ObjAry)
 }
 
 func (p *PNR) Ouput() map[string]interface{} {
 	rev := make(map[string]interface{})
+	rev["code"] = p.Code
 	for _, o := range p.ObjAry {
 		n := o.Name()
 		if n != "" {
