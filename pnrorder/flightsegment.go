@@ -14,7 +14,7 @@ type FlightSegment struct {
 	ClassAvail        string `json:"class_avail"`
 	DepartureDate     string `json:"departure_date"`
 	ArrivalDate       string `json:"arrival_date"`
-	Week              string `json:"week"`
+	Weekday           string `json:"weekday"`
 	DepartureCityCode string `json:"departure_city_code"`
 	DepartureCity     string `json:"departure_city"`
 	ArrivalCityCode   string `json:"arrival_city_code"`
@@ -82,7 +82,7 @@ func pickOutSegments(segments []string) (ret []*FlightSegment) {
 		fltSgm.FlightNumber = strings.TrimSpace(fltInfo[2:])
 		fltSgm.ClassAvail = m[3]
 		fltSgm.ArrivalDate = formatSegmentDate(m[4])
-		fltSgm.Week = m[6]
+		fltSgm.Weekday = m[6]
 		fltSgm.DepartureCityCode = m[8][:3]
 		fltSgm.DepartureTime = formatSegmentTime(m[10])
 		fltSgm.DepartureDate = formatSegmentDate(m[13])
