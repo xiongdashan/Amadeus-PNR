@@ -34,7 +34,7 @@ type FlightSegmentItem struct {
 func NewFltSegmentItem() *FlightSegmentItem {
 	return &FlightSegmentItem{
 		// Regex: regexp.MustCompile(`(\d+)(\s+)([A-Z]{2}|(\d\w))(\s+)?(\d+)(\s)?([A-Z]{1})\s+([0-9]{2})(.+)`),
-		Regex: regexp.MustCompile(`(\d+)(\s+)([A-Z0-9]+)(\s+)([A-Z]{1})\s+([0-9]{2})(.+)`),
+		Regex: regexp.MustCompile(`(\d+)(\s+)([A-Z0-9\s]+)(\s+)([A-Z]{1})\s+([0-9]{2})(.+)`),
 	}
 }
 

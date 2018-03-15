@@ -105,9 +105,10 @@ func splitNamesLine(line string, docs []string, tktNos []string) (rev []*Passeng
 	// 成人
 	regADT := regexp.MustCompile(`^([A-Z]+)/([A-Z\s]+)(\s(MS|MR))?$`)
 	// 婴儿 ZHANG/HUABIN MR(INFZHHENG/BING MSTR/23NOV16)
-	regINF := regexp.MustCompile(`^([A-Z]+)/([A-Z\s]+)(\s(MS|MR))?\(INF([A-Z]+)/([A-Z]+)\s(MSTR|MSSR)/(\d{2})([A-Z]{3})(\d{2})\)$`)
+	// regINF := regexp.MustCompile(`^([A-Z]+)/([A-Z\s]+)(\s(MS|MR))?\(INF([A-Z]+)/([A-Z]+)\s(MSTR|MSSR)/(\d{2})([A-Z]{3})(\d{2})\)$`)
+	regINF := regexp.MustCompile(`^([A-Z]+)\/([A-Z\s]+)(\s(MS|MR))?\(INF([A-Z]+)\/(([A-Z]+)\s(MSTR|MSSR))\/(\d{2})([A-Z]{3})(\d{2})\)$`)
 	// 儿童 ZHENG/HUA QING MSTR(CHD/20NOV10)
-	regCHD := regexp.MustCompile(`([A-Z]+)/([A-Z\s]+)(\s(MSRT|MSST))?\(CHD/(\d{2})([A-Z]{3})(\d{2})\)`)
+	regCHD := regexp.MustCompile(`([A-Z]+)/([A-Z\s]+)(\s(MSRT|MSST|MISS))?\(CHD/(\d{2})([A-Z]{3})(\d{2})\)`)
 	for i, v := range ary {
 		v = strings.TrimSpace(v)
 		if len(v) == 0 {
@@ -177,7 +178,7 @@ func infAndDdtInfo(regINF *regexp.Regexp, input string, pos int) (pADT *Passenge
 	pADT = adtInfoFromMatch(match)
 	pADT.Index = pos
 	m := match[0]
-	lastName, gender := nameAndGender(m[7])
+	lastName, gender := nameAndGender(m[6])
 	birthday := fmt.Sprintf("%s%s%s", m[8], m[9], m[10])
 	pINF = &Passenger{}
 	pINF.FirstName = m[5]
@@ -195,8 +196,9 @@ func nameAndGender(input string) (string, string) {
 	dict := map[string]string{
 		" MSTR": "M",
 		" MSSR": "F",
-		" MS":   "M",
-		" MR":   "F",
+		" MS":   "F",
+		" MR":   "M",
+		" MISS": "F",
 	}
 
 	for key, v := range dict {
@@ -215,6 +217,7 @@ func adtInfoFromMatch(match [][]string) (p *Passenger) {
 	p.FirstName = match[0][1]
 	p.LastName = lastName
 	p.Gender = gender
+	p.Type = "ADT"
 	return
 }
 
@@ -225,7 +228,6 @@ func adtInfo(regADT *regexp.Regexp, input string, docs []string, pos int) (p *Pa
 	//匹配基本信息
 	p = adtInfoFromMatch(match)
 	p.Index = pos
-	p.Type = "ADT"
 	//再分析Docs项
 	p.splitDoc(docs)
 	return
@@ -277,7 +279,7 @@ func (p *Passenger) splitDoc(docs []string) {
 				p.Gender = aryData[5][0:1]
 			}
 			if len(aryData[6]) > 0 {
-				p.IDExpireDate = aryData[6]
+				p.IDExpireDate = formatDate(aryData[6]).Format("2006-01-02")
 			}
 		}
 	}
