@@ -33,7 +33,8 @@ type FlightSegmentItem struct {
 //匹配开头部分 3  AF 381 L 23
 func NewFltSegmentItem() *FlightSegmentItem {
 	return &FlightSegmentItem{
-		Regex: regexp.MustCompile(`(\d+)(\s+)([A-Z]{2}|(\d\w))(\s+)?(\d+)(\s)?([A-Z]{1})\s+([0-9]{2})(.+)`),
+		// Regex: regexp.MustCompile(`(\d+)(\s+)([A-Z]{2}|(\d\w))(\s+)?(\d+)(\s)?([A-Z]{1})\s+([0-9]{2})(.+)`),
+		Regex: regexp.MustCompile(`(\d+)(\s+)([A-Z0-9]+)(\s+)([A-Z]{1})\s+([0-9]{2})(.+)`),
 	}
 }
 
